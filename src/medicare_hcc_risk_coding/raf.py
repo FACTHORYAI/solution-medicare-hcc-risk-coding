@@ -1,12 +1,11 @@
 """A simplified Medicare risk adjustment factor from age, sex and HCCs.
 
-The weights are illustrative and documented, not the official CMS-HCC model. The
-published examples in the solution's README anchor four HCC weights (HCC 18 = 0.625,
-HCC 19 = 0.124, HCC 35 = 0.279, HCC 40 = 0.423) and one demographic cell (female 70-74 =
-0.346); the remaining age and sex cells are plausible extensions. The CMS-HCC model
-adds disease hierarchies, interactions, and a normalization factor that this
-simplified calculation leaves out: a workspace plugs the official model in behind the
-same `calculate_raf` job.
+The weights are illustrative, not the official CMS-HCC model. There are four example HCC
+weights (HCC 18 = 0.625, HCC 19 = 0.124, HCC 35 = 0.279, HCC 40 = 0.423) and one published
+demographic cell (female 70-74 = 0.346); the other age and sex cells are illustrative. An HCC
+that is not in HCC_WEIGHTS counts as 0. The CMS-HCC model adds many more HCCs, disease
+hierarchies, interactions and a normalization factor, which this simplified calculation
+leaves out. No CMS mapping or weight table is included.
 """
 
 from __future__ import annotations

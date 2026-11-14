@@ -9,6 +9,7 @@ from typing import Any
 import pyarrow as pa
 
 from medicare_hcc_risk_coding.jobs import (
+    build_knowledge_graph,
     build_patient_profiles,
     calculate_raf,
     extract_icd10,
@@ -92,6 +93,14 @@ REGISTRY: dict[str, JobSpec] = {
             params_cls=hcc_distribution.Params,
             inputs=hcc_distribution.INPUTS,
             outputs=hcc_distribution.OUTPUTS,
+        ),
+        JobSpec(
+            name="build_knowledge_graph",
+            description="Build the risk adjustment knowledge graph as node and edge tables.",
+            run=build_knowledge_graph.run,
+            params_cls=build_knowledge_graph.Params,
+            inputs=build_knowledge_graph.INPUTS,
+            outputs=build_knowledge_graph.OUTPUTS,
         ),
     )
 }
