@@ -1,0 +1,122 @@
+[solution]
+id = "com.facthory.medicare_hcc_risk_coding"
+title = "Medicare HCC Risk Coding"
+version = "0.1.0"
+contract = "0-draft"
+licence = "Apache-2.0"
+health_related = true
+
+# Sample tables. All synthetic, generated for this repository (CC0-1.0); see data/README.md.
+[[dataset]]
+name = "notes_raw"
+path = "data/sample/notes_raw.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "notes"
+path = "data/sample/notes.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "patient_status"
+path = "data/sample/patient_status.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "hcc_weights"
+path = "data/sample/hcc_weights.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "icd10_codes"
+path = "data/sample/icd10_codes.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "demographics"
+path = "data/sample/demographics.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "patient_profiles"
+path = "data/sample/patient_profiles.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "patient_risk"
+path = "data/sample/patient_risk.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "raf_bands"
+path = "data/sample/raf_bands.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "hcc_distribution"
+path = "data/sample/hcc_distribution.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+# The two coding jobs take a TextModel as a third argument; Facthory provides model
+# access. The repository ships a recorded stand-in (text/recorded.py).
+[[job]]
+name = "prepare_notes"
+entry = "medicare_hcc_risk_coding.jobs.prepare_notes:run"
+mode = "call"
+inputs = ["notes_raw"]
+outputs = ["notes"]
+
+[[job]]
+name = "extract_icd10"
+entry = "medicare_hcc_risk_coding.jobs.extract_icd10:run"
+mode = "job"
+inputs = ["notes"]
+outputs = ["icd10_codes", "rejected_icd10"]
+
+[[job]]
+name = "infer_demographics"
+entry = "medicare_hcc_risk_coding.jobs.infer_demographics:run"
+mode = "job"
+inputs = ["notes"]
+outputs = ["demographics", "rejected_demographics"]
+
+[[job]]
+name = "build_patient_profiles"
+entry = "medicare_hcc_risk_coding.jobs.build_patient_profiles:run"
+mode = "call"
+inputs = ["icd10_codes", "demographics", "patient_status"]
+outputs = ["patient_profiles"]
+
+[[job]]
+name = "calculate_raf"
+entry = "medicare_hcc_risk_coding.jobs.calculate_raf:run"
+mode = "call"
+inputs = ["patient_profiles"]
+outputs = ["patient_risk"]
+
+[[job]]
+name = "raf_summary"
+entry = "medicare_hcc_risk_coding.jobs.raf_summary:run"
+mode = "call"
+inputs = ["patient_risk"]
+outputs = ["raf_bands"]
+
+[[job]]
+name = "hcc_distribution"
+entry = "medicare_hcc_risk_coding.jobs.hcc_distribution:run"
+mode = "call"
+inputs = ["patient_profiles", "hcc_weights"]
+outputs = ["hcc_distribution"]
+
+[skill]
+instructions = "skills/medicare_hcc_risk_coding.md"
