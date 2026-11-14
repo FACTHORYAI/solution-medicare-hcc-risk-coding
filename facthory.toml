@@ -67,8 +67,20 @@ path = "data/sample/hcc_distribution.parquet"
 synthetic = true
 licence = "CC0-1.0"
 
-# The two coding jobs take a TextModel as a third argument; Facthory provides model
-# access. The repository ships a recorded stand-in (text/recorded.py).
+[[dataset]]
+name = "graph_nodes"
+path = "data/sample/graph_nodes.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+[[dataset]]
+name = "graph_edges"
+path = "data/sample/graph_edges.parquet"
+synthetic = true
+licence = "CC0-1.0"
+
+# The two model jobs take a TextModel as a third argument; Facthory provides model access.
+# The repository ships a recorded stand-in (text/recorded.py).
 [[job]]
 name = "prepare_notes"
 entry = "medicare_hcc_risk_coding.jobs.prepare_notes:run"
@@ -117,6 +129,13 @@ entry = "medicare_hcc_risk_coding.jobs.hcc_distribution:run"
 mode = "call"
 inputs = ["patient_profiles", "hcc_weights"]
 outputs = ["hcc_distribution"]
+
+[[job]]
+name = "build_knowledge_graph"
+entry = "medicare_hcc_risk_coding.jobs.build_knowledge_graph:run"
+mode = "call"
+inputs = ["notes", "icd10_codes", "demographics", "hcc_weights"]
+outputs = ["graph_nodes", "graph_edges"]
 
 [skill]
 instructions = "skills/medicare_hcc_risk_coding.md"
