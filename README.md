@@ -23,13 +23,21 @@ Suggest HCC codes and risk adjustment factors from clinical notes for Medicare r
 - Its results are tables and pages in your workspace, so you can query them, chart them and ask the agent about them, inside your permissions.
 - Sample data in this repository is synthetic or openly licensed. No real patient data.
 
+## The design in one picture
+
+This diagram shows the design. It is a concept, not a map of finished platform features.
+
+![Flow diagram "From clinical notes to RAF risk scores": source data (clinical notes, PDF lab reports, medical images; protected health data) is ingested as raw unstructured clinical notes; the Facthory NLP engine identifies undiagnosed conditions and codes them into coded patient records (for example HCC and ICD-10); the updated RAF risk score is then calculated for each beneficiary and shown in a medical report. Each stage is recorded in the data catalog.](docs/images/clinical-notes-to-raf-scores.png)
+
+This repository covers clinical notes only: `extract_icd10` codes each problem to ICD-10-CM with its HCC number and assertion status through a text model, and `calculate_raf` computes a simplified risk adjustment factor per patient. PDF lab reports and medical images are not read, and the score is a simplified illustration, not the official CMS-HCC model.
+
 ## Not for clinical use
 
 This is software for research and analytics. It is not a medical device and must not be used to diagnose or treat a patient. Results can be wrong; a qualified person reviews them.
 
 ## Licence
 
-Apache-2.0. See [LICENSE](LICENSE). "Facthory" and the Facthory logo are trademarks of their owner and are not covered by that licence.
+Apache-2.0. See [LICENSE](LICENSE). "Facthory" and the Facthory logo are trademarks of their owner and are not covered by that licence. This includes the logo shown in the image under `docs/images/`.
 
 ## Jobs
 
